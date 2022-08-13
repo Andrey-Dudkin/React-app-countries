@@ -4,7 +4,7 @@ const Search = ({ setSearchCountry }) => {
     <div className="search_countries">
       <input
         type="text"
-        placeholder="Найти страну"
+        placeholder="Search country"
         className="seach_input"
         onChange={(e) => setSearchCountry(e.target.value)}
       />

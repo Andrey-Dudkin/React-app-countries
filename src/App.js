@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Search from "./Components/Search/Search";
-import { arryCountries } from "./countries";
+// import { arryCountries } from "./countries";
 import Country from "./Components/Country/Country";
 import Pagination from "./Components/Pagination/Pagination";
 import "./App.css"
 const App = () => {
   const [searchCountry, setSearchCountry] = useState("");
-  const [countries] = useState(arryCountries);
+  const [countries,setCountries] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sizePage] = useState(10);
+  const [sizePage] = useState(15);
+
+  useEffect(() =>{
+    const getCountries = async() =>{
+      const result = await axios.get("https://restcountries.com/v3.1/all")
+      setCountries(result.data)
+    }
+    getCountries()
+  },[])
 
   const search = countries.filter((country) =>
-    country.namecountry.includes(searchCountry)
+    country.name.common.includes(searchCountry)
   );
 
   if (currentPage > Math.ceil(search.length / sizePage) && search.length > 0) {
@@ -25,14 +34,15 @@ const App = () => {
 
   return (
     <div className="App">
+      <h1 className="title">Country Directory</h1>
       <Search setSearchCountry={setSearchCountry} />
       <div className="flex_container">
-        {currentPageCountries.map((country) => (
+        {currentPageCountries.map((country, index) => (
           <Country
-            key={country.id}  
-            flag={country.flagcountry}
-            title={country.namecountry}
-            capital={country.capitalcountry}
+            key={index}  
+            flag={country.flags.png}
+            title={country.name.common}
+            capital={country.capital}
           />
         ))}
       </div>
